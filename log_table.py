@@ -7,3 +7,6 @@ def create_table(rows):
     # Gør tidspunktet til rigtigt tidspunkt, så vi kan sortere og plotte på det senere
     table["timestamp"] = pd.to_datetime(table["timestamp"])
     return table
+def filter_by_level(table, level):
+    """Returnerer kun de rækker, hvor level matcher, fx 'ALERT'."""
+    return table[table["level"] == level]

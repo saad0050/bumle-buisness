@@ -1,7 +1,8 @@
 import pandas as pd
 
 from log_loader import load_log
-from log_table import create_table
+from log_table import create_table , filter_by_level
+
 
 # Vis alle kolonner og brug en bred visning i stedet for at skjule dem med "..."
 pd.set_option("display.max_columns", None)
@@ -14,3 +15,8 @@ logs = load_log("data/cyber_security_log_sample.txt")
 table = create_table(logs)
 print(table.head(10))
 print("Antal rækker og kolonner:", table.shape)
+
+# Vis kun alarmerne
+alerts = filter_by_level(table, "ALERT")
+print("Antal ALERT-hændelser:", len(alerts))
+print(alerts)

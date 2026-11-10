@@ -33,4 +33,9 @@ print(table[table["src_ip"].isin(rare_ips)])
 # Tæl mislykkede logins pr. time og vis som søjlediagram
 failed_logins = table[table["event"] == "LOGIN_FAILED"]
 failed_per_hour = count_per_hour(failed_logins)
-plot_bar(failed_per_hour, "Mislykkede logins pr. time", "Time", "Antal LOGIN_FAILED")
+#plot_bar(failed_per_hour, "Mislykkede logins pr. time", "Time", "Antal LOGIN_FAILED")
+
+# Find hændelser, hvor malware er registreret
+malware_events = table[table["event"] == "MALWARE_SIGNATURE_MATCH"]
+
+print(malware_events)

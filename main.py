@@ -1,9 +1,8 @@
 import pandas as pd
 
 from log_loader import load_log
-from log_table import create_table, filter_by_level
-from log_plots import plot_scatter
-
+from log_table import create_table, filter_by_level, count_per_hour
+from log_plots import plot_scatter, plot_bar
 
 # Vis alle kolonner og brug en bred visning i stedet for at skjule dem med "..."
 pd.set_option("display.max_columns", None)
@@ -30,4 +29,8 @@ rare_ips = ["203.0.113.250", "198.51.100.200"]
 print(table[table["src_ip"].isin(rare_ips)])
 
 # Hvor mange gange optræder hver IP?
-plot_scatter(table, "timestamp", "src_ip")
+#plot_scatter(table, "timestamp", "src_ip")
+# Tæl mislykkede logins pr. time og vis som søjlediagram
+failed_logins = table[table["event"] == "LOGIN_FAILED"]
+failed_per_hour = count_per_hour(failed_logins)
+plot_bar(failed_per_hour, "Mislykkede logins pr. time", "Time", "Antal LOGIN_FAILED")

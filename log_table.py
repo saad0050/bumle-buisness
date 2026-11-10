@@ -12,3 +12,8 @@ def create_table(rows):
 def filter_by_level(table, level):
     """Returnerer kun de rækker, hvor level matcher, fx 'ALERT'."""
     return table[table["level"] == level]
+
+def count_per_hour(table):
+    """Tæller antal rækker pr. time og returnerer tallene som en serie."""
+    # floor("h") runder hvert tidspunkt ned til hele timer, fx 08:03 bliver 08:00
+    return table.groupby(table["timestamp"].dt.floor("h")).size()

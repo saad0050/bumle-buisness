@@ -42,4 +42,6 @@ print(malware_events)
 
 malware_counts = malware_events["src_ip"].value_counts()
 
-plot_bar(malware_counts, "Malware-hændelser pr. IP-adresse", "IP-adresse", "Antal malware-hændelser")
+
+plot_bar(malware_counts, "Sikkerhedsadvarsel: Registreret malware fordelt på IP-adresser", "IP-adresse", "Antal malware-alarmer")
+

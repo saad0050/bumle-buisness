@@ -39,3 +39,7 @@ failed_per_hour = count_per_hour(failed_logins)
 malware_events = table[table["event"] == "MALWARE_SIGNATURE_MATCH"]
 
 print(malware_events)
+
+malware_counts = malware_events["src_ip"].value_counts()
+
+plot_bar(malware_counts, "Malware-hændelser pr. IP-adresse", "IP-adresse", "Antal malware-hændelser")

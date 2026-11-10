@@ -23,4 +23,11 @@ print("Antal ALERT-hændelser:", len(alerts))
 print(alerts)
 
 # Første forsøg: hvilke porte bliver brugt over tid?
-plot_scatter(table, "timestamp", "dest_port")
+#plot_scatter(table, "user", "event")
+
+# Undersøg de to IP-adresser, der kun optræder ved port 443
+rare_ips = ["203.0.113.250", "198.51.100.200"]
+print(table[table["src_ip"].isin(rare_ips)])
+
+# Hvor mange gange optræder hver IP?
+plot_scatter(table, "timestamp", "src_ip")

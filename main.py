@@ -1,7 +1,8 @@
 import pandas as pd
 
 from log_loader import load_log
-from log_table import create_table , filter_by_level
+from log_table import create_table, filter_by_level
+from log_plots import plot_scatter
 
 
 # Vis alle kolonner og brug en bred visning i stedet for at skjule dem med "..."
@@ -20,3 +21,6 @@ print("Antal rækker og kolonner:", table.shape)
 alerts = filter_by_level(table, "ALERT")
 print("Antal ALERT-hændelser:", len(alerts))
 print(alerts)
+
+# Første forsøg: hvilke porte bliver brugt over tid?
+plot_scatter(table, "timestamp", "dest_port")

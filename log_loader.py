@@ -15,6 +15,7 @@ def parse_line(line):
 
 
 
+
 def load_log(file_path):
     """Læser logfilen og håndterer fejl, hvis filen mangler."""
     rows = []
@@ -23,8 +24,15 @@ def load_log(file_path):
         with open(file_path, "r", encoding="utf-8") as file:
             for line in file:
                 line = line.strip()
+
                 if line == "":
                     continue
+
+                # Kontrollér om loglinjen indeholder de nødvendige felter
+                if not all(field + "=" in line for field in ["level", "event", "user", "src_ip"]):
+                    print("ADVARSEL: Springer en loglinje over med forkert format.")
+                    continue
+
                 rows.append(parse_line(line))
 
     except FileNotFoundError:
@@ -32,3 +40,4 @@ def load_log(file_path):
         return []
 
     return rows
+

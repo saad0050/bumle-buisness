@@ -36,7 +36,13 @@ print(alerts)
 # Første forsøg: hvilke porte bliver brugt over tid?
 #plot_scatter(table, "user", "event")
 
-# Undersøg de to IP-adresser, der kun optræder ved port 443
+# Analyse af scatter-plots:
+# De fleste IP-adresser har aktiviteter fordelt over hele tidsperioden.
+# IP-adressen 203.0.113.250 har 18 mislykkede loginforsøg på kort tid.
+# IP-adressen 198.51.100.200 har 3 malware-alarmer på forskellige servere.
+# Hændelserne ligger tæt på hinanden tidsmæssigt og er mistænkelige.
+# Scatter-plots viser mønstrene, men beviser ikke, at et angreb lykkedes.
+
 rare_ips = ["203.0.113.250", "198.51.100.200"]
 print(table[table["src_ip"].isin(rare_ips)])
 
@@ -45,6 +51,11 @@ print(table[table["src_ip"].isin(rare_ips)])
 # Tæl mislykkede logins pr. time og vis som søjlediagram
 #failed_logins = table[table["event"] == "LOGIN_FAILED"]
 #failed_per_hour = count_per_hour(failed_logins)
+
+# Vi bruger et søjlediagram, fordi det tydeligt viser antallet
+# af mislykkede loginforsøg pr. time og gør det nemt
+# at sammenligne timerne og opdage usædvanlig aktivitet.
+
 #plot_bar(failed_per_hour, "Mislykkede logins pr. time", "Time", "Antal LOGIN_FAILED")
 
 # Find hændelser, hvor malware er registreret
@@ -99,3 +110,13 @@ print("TEST BESTÅET: Alle sikkerhedsniveauer er talt korrekt.")
 #test_date = pd.to_datetime("forkert_dato", errors="coerce")
 
 #print("Test af ugyldigt tidspunkt:", test_date)
+
+
+
+# Test af fejlformaterede loglinjer
+from log_loader import parse_line
+
+test_line = '2026-03-02 level=ALERT event=LOGIN_FAILED'
+
+print("Test af loglinje:", parse_line(test_line))
+

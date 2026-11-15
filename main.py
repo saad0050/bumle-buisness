@@ -23,6 +23,11 @@ table = create_table(logs)
 print(table.head(10))
 print("Antal rækker og kolonner:", table.shape)
 
+# Kontroller om logdata indeholder ugyldige værdier
+print("Ugyldige portnumre:", table["dest_port"].isna().sum())
+print("Ugyldige tidspunkter:", table["timestamp"].isna().sum())
+
+
 # Vis kun alarmerne
 alerts = filter_by_level(table, "ALERT")
 print("Antal ALERT-hændelser:", len(alerts))
@@ -83,3 +88,14 @@ print("TEST BESTÅET: Alle event-typer er talt korrekt.")
 #print(top_ips)
 
 #plot_bar(top_ips, "De 10 mest aktive IP-adresser", "IP-adresse", "Antal registreringer")
+
+
+# T17: Test håndtering af ugyldigt portnummer
+#test_port = pd.to_numeric("abc", errors="coerce")
+
+#print("Test af ugyldigt portnummer:", test_port)
+
+# T17: Test håndtering af ugyldigt tidspunkt
+#test_date = pd.to_datetime("forkert_dato", errors="coerce")
+
+#print("Test af ugyldigt tidspunkt:", test_date)

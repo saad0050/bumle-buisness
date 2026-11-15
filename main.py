@@ -69,14 +69,14 @@ assert event_counts.sum() == len(table)
 print("TEST BESTÅET: Alle event-typer er talt korrekt.")
 
 # T14: Tæl hændelser efter sikkerhedsniveau
-#level_counts = count_levels(table)
+level_counts = count_levels(table)
 
 #print(level_counts)
 
 # T15: Test at alle sikkerhedsniveauer er talt med
-#assert level_counts.sum() == len(table)
+assert level_counts.sum() == len(table)
 
-#print("TEST BESTÅET: Alle sikkerhedsniveauer er talt korrekt.")
+print("TEST BESTÅET: Alle sikkerhedsniveauer er talt korrekt.")
 
 
 #plot_bar(level_counts, "Fordeling af sikkerhedsniveauer", "Sikkerhedsniveau", "Antal hændelser")

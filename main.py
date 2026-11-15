@@ -1,7 +1,7 @@
 import pandas as pd
 
 from log_loader import load_log
-from log_table import create_table, filter_by_level, count_per_hour, count_events
+from log_table import create_table, filter_by_level, count_per_hour, count_events, count_levels
 from log_plots import plot_scatter, plot_bar
 
 # Vis alle kolonner og brug en bred visning i stedet for at skjule dem med "..."
@@ -31,14 +31,14 @@ print(table[table["src_ip"].isin(rare_ips)])
 # Hvor mange gange optræder hver IP?
 #plot_scatter(table, "timestamp", "src_ip")
 # Tæl mislykkede logins pr. time og vis som søjlediagram
-failed_logins = table[table["event"] == "LOGIN_FAILED"]
-failed_per_hour = count_per_hour(failed_logins)
+#failed_logins = table[table["event"] == "LOGIN_FAILED"]
+#failed_per_hour = count_per_hour(failed_logins)
 #plot_bar(failed_per_hour, "Mislykkede logins pr. time", "Time", "Antal LOGIN_FAILED")
 
 # Find hændelser, hvor malware er registreret
-malware_events = table[table["event"] == "MALWARE_SIGNATURE_MATCH"]
+#malware_events = table[table["event"] == "MALWARE_SIGNATURE_MATCH"]
 
-print(malware_events)
+#print(malware_events)
 
 #malware_counts = malware_events["src_ip"].value_counts()
 
@@ -46,7 +46,22 @@ print(malware_events)
 #plot_bar(malware_counts, "Sikkerhedsadvarsel: Registreret malware fordelt på IP-adresser", "IP-adresse", "Antal malware-alarmer")
 
 
-# T13: Tæl hændelser efter event-type
-event_counts = count_events(table)
+# Tæl hændelser efter event-type
+#event_counts = count_events(table)
 
-print(event_counts)
+#print(event_counts)
+
+# T14: Tæl hændelser efter sikkerhedsniveau
+#level_counts = count_levels(table)
+
+#print(level_counts)
+
+#plot_bar(level_counts, "Fordeling af sikkerhedsniveauer", "Sikkerhedsniveau", "Antal hændelser")
+
+
+# T14: Find de 10 mest aktive IP-adresser
+top_ips = table["src_ip"].value_counts().head(10)
+
+print(top_ips)
+
+plot_bar(top_ips, "De 10 mest aktive IP-adresser", "IP-adresse", "Antal registreringer")

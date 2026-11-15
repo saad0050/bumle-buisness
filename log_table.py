@@ -22,3 +22,8 @@ def count_per_hour(table):
 def count_events(table):
     """Tæller hvor mange gange hver hændelsestype forekommer."""
     return table["event"].value_counts()
+
+
+def count_levels(table):
+    """Tæller hvor mange hændelser der er på hvert sikkerhedsniveau."""
+    return table["level"].value_counts()

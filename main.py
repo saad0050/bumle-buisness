@@ -1,40 +1,56 @@
+
 import pandas as pd
 
 from log_loader import load_log
 from log_table import create_table, filter_by_level, count_per_hour, count_events, count_levels
 from log_plots import plot_scatter, plot_bar
 
-# Vis alle kolonner og brug en bred visning i stedet for at skjule dem med "..."
+
+# Gør tabellerne mere overskuelige i terminalen
 pd.set_option("display.max_columns", None)
 pd.set_option("display.width", 200)
 
-# Indlæs hele logfilen i programmets hukommelse
+
+# 1. INDLÆSNING AF LOGDATA
+
+print("\n=== BUMLE BUSINESS – VPN-LOGOVERVÅGNING ===")
 
 logs = load_log("data/cyber_security_log_sample.txt")
 
-# Stop programmet, hvis der ikke er nogen logdata
+# Stop programmet, hvis logfilen mangler eller er tom
 if not logs:
     print("Programmet afsluttes, fordi der ikke er nogen logdata.")
     exit()
 
-
-# Lav data om til en tabel og vis de første 10 rækker
 table = create_table(logs)
-print(table.head(10))
-print("Antal rækker og kolonner:", table.shape)
 
-# Kontroller om logdata indeholder ugyldige værdier
+print("\n=== OVERSIGT OVER LOGDATA ===")
+print("Antal rækker og kolonner:", table.shape)
+print(table.head(10))
+
+
+# 2. KONTROL AF LOGDATA
+
+print("\n=== KONTROL AF LOGDATA ===")
 print("Ugyldige portnumre:", table["dest_port"].isna().sum())
 print("Ugyldige tidspunkter:", table["timestamp"].isna().sum())
 
 
-# Vis kun alarmerne
+# 3. SIKKERHEDSALARMER
+
 alerts = filter_by_level(table, "ALERT")
+
+print("\n=== SIKKERHEDSALARMER ===")
 print("Antal ALERT-hændelser:", len(alerts))
 print(alerts)
 
-# Første forsøg: hvilke porte bliver brugt over tid?
-#plot_scatter(table, "user", "event")
+
+# 4. ANALYSE AF MISTÆNKELIGE IP-ADRESSER
+
+print("\n=== MISTÆNKELIGE IP-ADRESSER ===")
+
+rare_ips = ["203.0.113.250", "198.51.100.200"]
+print(table[table["src_ip"].isin(rare_ips)])
 
 # Analyse af scatter-plots:
 # De fleste IP-adresser har aktiviteter fordelt over hele tidsperioden.
@@ -43,80 +59,95 @@ print(alerts)
 # Hændelserne ligger tæt på hinanden tidsmæssigt og er mistænkelige.
 # Scatter-plots viser mønstrene, men beviser ikke, at et angreb lykkedes.
 
-rare_ips = ["203.0.113.250", "198.51.100.200"]
-print(table[table["src_ip"].isin(rare_ips)])
 
-# Hvor mange gange optræder hver IP?
-#plot_scatter(table, "timestamp", "src_ip")
-# Tæl mislykkede logins pr. time og vis som søjlediagram
-#failed_logins = table[table["event"] == "LOGIN_FAILED"]
-#failed_per_hour = count_per_hour(failed_logins)
+# 5. OPTÆLLING AF HÆNDELSER
 
-# Vi bruger et søjlediagram, fordi det tydeligt viser antallet
-# af mislykkede loginforsøg pr. time og gør det nemt
-# at sammenligne timerne og opdage usædvanlig aktivitet.
-
-#plot_bar(failed_per_hour, "Mislykkede logins pr. time", "Time", "Antal LOGIN_FAILED")
-
-# Find hændelser, hvor malware er registreret
-#malware_events = table[table["event"] == "MALWARE_SIGNATURE_MATCH"]
-
-#print(malware_events)
-
-#malware_counts = malware_events["src_ip"].value_counts()
-
-
-#plot_bar(malware_counts, "Sikkerhedsadvarsel: Registreret malware fordelt på IP-adresser", "IP-adresse", "Antal malware-alarmer")
-
-
-# Tæl hændelser efter event-type
 event_counts = count_events(table)
-
-print(event_counts)
-
-# T15: Test at alle event-typer er talt med
-assert event_counts.sum() == len(table)
-
-print("TEST BESTÅET: Alle event-typer er talt korrekt.")
-
-# T14: Tæl hændelser efter sikkerhedsniveau
 level_counts = count_levels(table)
 
-#print(level_counts)
+print("\n=== HÆNDELSER EFTER TYPE ===")
+print(event_counts)
 
-# T15: Test at alle sikkerhedsniveauer er talt med
+print("\n=== FORDELING AF SIKKERHEDSNIVEAUER ===")
+print(level_counts)
+
+
+# 6. TEST AF OPTÆLLINGER
+
+assert event_counts.sum() == len(table)
+print("TEST BESTÅET: Alle event-typer er talt korrekt.")
+
 assert level_counts.sum() == len(table)
-
 print("TEST BESTÅET: Alle sikkerhedsniveauer er talt korrekt.")
 
 
-#plot_bar(level_counts, "Fordeling af sikkerhedsniveauer", "Sikkerhedsniveau", "Antal hændelser")
+# 7. FORBEREDELSE AF DIAGRAMMER
+
+failed_logins = table[table["event"] == "LOGIN_FAILED"]
+failed_per_hour = count_per_hour(failed_logins)
+
+malware_events = table[table["event"] == "MALWARE_SIGNATURE_MATCH"]
+malware_counts = malware_events["src_ip"].value_counts()
+
+top_ips = table["src_ip"].value_counts().head(10)
 
 
-# T14: Find de 10 mest aktive IP-adresser
-#top_ips = table["src_ip"].value_counts().head(10)
+# 8. VISUALISERING AF LOGDATA
 
-#print(top_ips)
-
-#plot_bar(top_ips, "De 10 mest aktive IP-adresser", "IP-adresse", "Antal registreringer")
+print("\n=== DIAGRAMMER ===")
+print("Luk det aktuelle diagramvindue for at se det næste.")
 
 
-# T17: Test håndtering af ugyldigt portnummer
-#test_port = pd.to_numeric("abc", errors="coerce")
-
-#print("Test af ugyldigt portnummer:", test_port)
-
-# T17: Test håndtering af ugyldigt tidspunkt
-#test_date = pd.to_datetime("forkert_dato", errors="coerce")
-
-#print("Test af ugyldigt tidspunkt:", test_date)
+# Diagram 1: Scatter-plot over IP-adresser og tidspunkt
+plot_scatter(table, "timestamp", "src_ip")
 
 
+# Diagram 2: Mislykkede loginforsøg pr. time
+# Vi bruger søjlediagram, fordi det gør det nemt at sammenligne
+# antallet af mislykkede loginforsøg og opdage usædvanlig aktivitet.
 
-# Test af fejlformaterede loglinjer
-from log_loader import parse_line
+plot_bar(
+    failed_per_hour,
+    "Mislykkede logins pr. time",
+    "Time",
+    "Antal LOGIN_FAILED"
+)
 
-test_line = '2026-03-02 level=ALERT event=LOGIN_FAILED'
 
-print("Test af loglinje:", parse_line(test_line))
+# Diagram 3: Malware-alarmer efter IP-adresse
+plot_bar(
+    malware_counts,
+    "Sikkerhedsadvarsel: Registreret malware fordelt på IP-adresser",
+    "IP-adresse",
+    "Antal malware-alarmer"
+)
 
+
+# Diagram 4: Fordeling af sikkerhedsniveauer
+plot_bar(
+    level_counts,
+    "Fordeling af sikkerhedsniveauer",
+    "Sikkerhedsniveau",
+    "Antal hændelser"
+)
+
+
+# Diagram 5: De 10 mest aktive IP-adresser
+plot_bar(
+    top_ips,
+    "De 10 mest aktive IP-adresser",
+    "IP-adresse",
+    "Antal registreringer"
+)
+
+
+# Diagram 6: Fordeling af hændelsestyper
+plot_bar(
+    event_counts,
+    "Fordeling af hændelsestyper",
+    "Hændelsestype",
+    "Antal registreringer"
+)
+
+
+print("\n=== PROGRAMMET ER AFSLUTTET ===")

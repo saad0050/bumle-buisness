@@ -9,7 +9,14 @@ pd.set_option("display.max_columns", None)
 pd.set_option("display.width", 200)
 
 # Indlæs hele logfilen i programmets hukommelse
+
 logs = load_log("data/cyber_security_log_sample.txt")
+
+# Stop programmet, hvis der ikke er nogen logdata
+if not logs:
+    print("Programmet afsluttes, fordi der ikke er nogen logdata.")
+    exit()
+
 
 # Lav data om til en tabel og vis de første 10 rækker
 table = create_table(logs)

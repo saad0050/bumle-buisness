@@ -14,13 +14,21 @@ def parse_line(line):
     return row
 
 
+
 def load_log(file_path):
-    """Læser hele logfilen og returnerer en liste med én ordbog pr. linje."""
+    """Læser logfilen og håndterer fejl, hvis filen mangler."""
     rows = []
-    with open(file_path, "r", encoding="utf-8") as file:
-        for line in file:
-            line = line.strip()             # fjern linjeskift i enderne
-            if line == "":
-                continue                    # spring tomme linjer over
-            rows.append(parse_line(line))
+
+    try:
+        with open(file_path, "r", encoding="utf-8") as file:
+            for line in file:
+                line = line.strip()
+                if line == "":
+                    continue
+                rows.append(parse_line(line))
+
+    except FileNotFoundError:
+        print("FEJL: Logfilen blev ikke fundet.")
+        return []
+
     return rows

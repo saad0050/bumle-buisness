@@ -47,21 +47,32 @@ print(table[table["src_ip"].isin(rare_ips)])
 
 
 # Tæl hændelser efter event-type
-#event_counts = count_events(table)
+event_counts = count_events(table)
 
-#print(event_counts)
+print(event_counts)
+
+# T15: Test at alle event-typer er talt med
+assert event_counts.sum() == len(table)
+
+print("TEST BESTÅET: Alle event-typer er talt korrekt.")
 
 # T14: Tæl hændelser efter sikkerhedsniveau
 #level_counts = count_levels(table)
 
 #print(level_counts)
 
+# T15: Test at alle sikkerhedsniveauer er talt med
+#assert level_counts.sum() == len(table)
+
+#print("TEST BESTÅET: Alle sikkerhedsniveauer er talt korrekt.")
+
+
 #plot_bar(level_counts, "Fordeling af sikkerhedsniveauer", "Sikkerhedsniveau", "Antal hændelser")
 
 
 # T14: Find de 10 mest aktive IP-adresser
-top_ips = table["src_ip"].value_counts().head(10)
+#top_ips = table["src_ip"].value_counts().head(10)
 
-print(top_ips)
+#print(top_ips)
 
-plot_bar(top_ips, "De 10 mest aktive IP-adresser", "IP-adresse", "Antal registreringer")
+#plot_bar(top_ips, "De 10 mest aktive IP-adresser", "IP-adresse", "Antal registreringer")

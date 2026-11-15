@@ -1,7 +1,7 @@
 import pandas as pd
 
 from log_loader import load_log
-from log_table import create_table, filter_by_level, count_per_hour
+from log_table import create_table, filter_by_level, count_per_hour, count_events
 from log_plots import plot_scatter, plot_bar
 
 # Vis alle kolonner og brug en bred visning i stedet for at skjule dem med "..."
@@ -40,8 +40,13 @@ malware_events = table[table["event"] == "MALWARE_SIGNATURE_MATCH"]
 
 print(malware_events)
 
-malware_counts = malware_events["src_ip"].value_counts()
+#malware_counts = malware_events["src_ip"].value_counts()
 
 
-plot_bar(malware_counts, "Sikkerhedsadvarsel: Registreret malware fordelt på IP-adresser", "IP-adresse", "Antal malware-alarmer")
+#plot_bar(malware_counts, "Sikkerhedsadvarsel: Registreret malware fordelt på IP-adresser", "IP-adresse", "Antal malware-alarmer")
 
+
+# T13: Tæl hændelser efter event-type
+event_counts = count_events(table)
+
+print(event_counts)

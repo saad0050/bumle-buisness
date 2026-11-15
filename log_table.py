@@ -17,3 +17,8 @@ def count_per_hour(table):
     """Tæller antal rækker pr. time og returnerer tallene som en serie."""
     # floor("h") runder hvert tidspunkt ned til hele timer, fx 08:03 bliver 08:00
     return table.groupby(table["timestamp"].dt.floor("h")).size()
+
+
+def count_events(table):
+    """Tæller hvor mange gange hver hændelsestype forekommer."""
+    return table["event"].value_counts()
